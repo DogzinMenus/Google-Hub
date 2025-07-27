@@ -3,7 +3,7 @@ local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "GoogleHub"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-
+ 
 -- Frame Principal (minimizado por padrão)
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
@@ -20,7 +20,7 @@ MainFrame.BackgroundTransparency = 0
 MainFrame.AutomaticSize = Enum.AutomaticSize.None
 MainFrame.BorderColor3 = Color3.fromRGB(0, 170, 255)
 MainFrame.BackgroundTransparency = 0.05
-
+ 
 -- Sombra
 local Shadow = Instance.new("ImageLabel")
 Shadow.Name = "Shadow"
@@ -33,7 +33,7 @@ Shadow.ScaleType = Enum.ScaleType.Slice
 Shadow.SliceCenter = Rect.new(10, 10, 118, 118)
 Shadow.ZIndex = 0
 Shadow.Parent = MainFrame
-
+ 
 -- Título
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Name = "TitleLabel"
@@ -49,7 +49,7 @@ TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 TitleLabel.Parent = MainFrame
 TitleLabel.BackgroundTransparency = 0.1
 TitleLabel.ClipsDescendants = true
-
+ 
 -- Botão Minimizar
 local Minimize = Instance.new("TextButton")
 Minimize.Name = "MinimizeButton"
@@ -62,7 +62,7 @@ Minimize.TextSize = 20
 Minimize.Font = Enum.Font.GothamBold
 Minimize.BorderSizePixel = 0
 Minimize.Parent = MainFrame
-
+ 
 -- Botão Fechar (X)
 local Close = Instance.new("TextButton")
 Close.Name = "CloseButton"
@@ -75,7 +75,7 @@ Close.TextSize = 18
 Close.Font = Enum.Font.GothamBold
 Close.BorderSizePixel = 0
 Close.Parent = MainFrame
-
+ 
 -- Minimizar/Restaurar
 local isMinimized = true -- <--- começa como minimizado
 Minimize.MouseButton1Click:Connect(function()
@@ -86,12 +86,12 @@ Minimize.MouseButton1Click:Connect(function()
     end
     isMinimized = not isMinimized
 end)
-
+ 
 -- Fechar
 Close.MouseButton1Click:Connect(function()
     MainFrame.Visible = false
 end)
-
+ 
 -- Botão Toggle com Imagem (para mostrar/ocultar o menu)
 local ToggleButton = Instance.new("ImageButton")
 ToggleButton.Name = "ToggleButton"
@@ -103,12 +103,12 @@ ToggleButton.ZIndex = 10
 ToggleButton.Parent = ScreenGui
 ToggleButton.Active = true
 ToggleButton.Draggable = true
- 
+
 -- Alternar visibilidade do MainFrame
 ToggleButton.MouseButton1Click:Connect(function()
     MainFrame.Visible = not MainFrame.Visible
 end)
- 
+
 -- Barra lateral rolável (ScrollingFrame) para abas
 local SideFrame = Instance.new("ScrollingFrame")
 SideFrame.Name = "SideFrame"
@@ -120,7 +120,7 @@ SideFrame.ScrollBarThickness = 6
 SideFrame.ScrollingDirection = Enum.ScrollingDirection.Y
 SideFrame.CanvasSize = UDim2.new(0, 0, 0, 600) -- ← espaço extra de rolagem
 SideFrame.Parent = MainFrame
- 
+
 local OptionsFrame = Instance.new("ScrollingFrame")
 OptionsFrame.Name = "OptionsFrame"
 OptionsFrame.Size = UDim2.new(1, -130, 1, -40) -- ocupa espaço à direita da barra lateral
@@ -132,7 +132,7 @@ OptionsFrame.ScrollingDirection = Enum.ScrollingDirection.Y
 OptionsFrame.CanvasSize = UDim2.new(0, 0, 0, 600) -- espaço de rolagem
 OptionsFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
 OptionsFrame.Parent = MainFrame
- 
+
 -- Layout para organizar conteúdo verticalmente
 local OptionsLayout = Instance.new("UIListLayout")
 OptionsLayout.Padding = UDim.new(0, 6)
@@ -143,7 +143,7 @@ local UIListLayout = Instance.new("UIListLayout")
 UIListLayout.Padding = UDim.new(0, 4)
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 UIListLayout.Parent = SideFrame
- 
+
 -- Função para limpar o conteúdo do OptionsFrame
 local function ClearOptions()
     for _, child in ipairs(OptionsFrame:GetChildren()) do
@@ -152,7 +152,7 @@ local function ClearOptions()
         end
     end
 end
- 
+
 -- Criar botão da aba "Main"
 local MainTabButton = Instance.new("TextButton")
 MainTabButton.Name = "MainTab"
@@ -164,9 +164,9 @@ MainTabButton.TextColor3 = Color3.fromRGB(255, 255, 255) -- branco por padrão
 MainTabButton.Font = Enum.Font.GothamBold
 MainTabButton.TextSize = 20
 MainTabButton.Parent = SideFrame
- 
+
 local mainActive = false
- 
+
 -- Função para criar botões simples dentro do OptionsFrame
 local function createOptionButton(text, positionY, callback)
     local btn = Instance.new("TextButton")
@@ -193,12 +193,12 @@ local function createOptionButton(text, positionY, callback)
     end)
     return btn
 end
- 
+
 local lastSafePos = nil
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
- 
+
 -- Atualiza posição segura para Anti Void
 RunService.Heartbeat:Connect(function()
     if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
@@ -208,7 +208,7 @@ RunService.Heartbeat:Connect(function()
         end
     end
 end)
- 
+
 -- Estado dos toggles
 local antiVoidEnabled = false
 local antiSitEnabled = false
@@ -217,9 +217,9 @@ local autoRejoinEnabled = false
 local antiKickEnabled = false
 local antiDenunciaEnabled = false
 local antiColisaoEnabled = false
- 
+
 -- Funções das opções
- 
+
 local function activateAntiVoid(active)
     antiVoidEnabled = active
     if active then
@@ -234,7 +234,7 @@ local function activateAntiVoid(active)
         end)
     end
 end
- 
+
 local function activateAntiSit(active)
     antiSitEnabled = active
     if active then
@@ -247,7 +247,7 @@ local function activateAntiSit(active)
         end
     end
 end
- 
+
 local function activateAntiAudio(active)
     antiAudioEnabled = active
     if active then
@@ -265,7 +265,7 @@ local function activateAntiAudio(active)
         end)
     end
 end
- 
+
 local function activateAutoRejoin(active)
     autoRejoinEnabled = active
     if active then
@@ -280,7 +280,7 @@ local function activateAutoRejoin(active)
         end)
     end
 end
- 
+
 local function activateAntiKick(active)
     antiKickEnabled = active
     if active then
@@ -288,7 +288,7 @@ local function activateAntiKick(active)
         print("Anti Kick ativado")
     end
 end
- 
+
 local function activateAntiDenuncia(active)
     antiDenunciaEnabled = active
     if active then
@@ -296,7 +296,7 @@ local function activateAntiDenuncia(active)
         print("Anti Denúncia ativado")
     end
 end
- 
+
 local function activateAntiColisao(active)
     antiColisaoEnabled = active
     if player.Character then
@@ -316,7 +316,7 @@ local function activateAntiColisao(active)
         end
     end
 end
- 
+
 -- Função para ativar a aba Main e criar os botões
 local function ActivateMainTab()
     mainActive = true
@@ -343,7 +343,7 @@ local function ActivateMainTab()
     createOptionButton("Anti Denúncia", 265, activateAntiDenuncia)
     createOptionButton("Anti Colisão", 310, activateAntiColisao)
 end
- 
+
 -- Evento do botão da aba Main
 MainTabButton.MouseButton1Click:Connect(function()
     if mainActive then
@@ -354,7 +354,7 @@ MainTabButton.MouseButton1Click:Connect(function()
         ActivateMainTab()
     end
 end)
- 
+
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local player = Players.LocalPlayer
@@ -374,212 +374,194 @@ TrollTabButton.Parent = SideFrame
 local trollActive = false
 local selectedPlayer = nil
 local isViewing = false
-local ultimaPosicao = nil
+local viewConnection
 
 local function findPlayerByName(name)
-	for _, plr in pairs(Players:GetPlayers()) do
-		if plr.Name:lower():sub(1, #name) == name:lower() then
-			return plr
-		end
-	end
-	return nil
+    for _, plr in pairs(Players:GetPlayers()) do
+        if plr.Name:lower():sub(1, #name) == name:lower() then
+            return plr
+        end
+    end
+    return nil
 end
 
 local function ClearOptions()
-	for _, child in pairs(OptionsFrame:GetChildren()) do
-		if not child:IsA("UIListLayout") then
-			child:Destroy()
-		end
-	end
+    for _, child in pairs(OptionsFrame:GetChildren()) do
+        if not child:IsA("UIListLayout") then
+            child:Destroy()
+        end
+    end
 end
 
 local function ActivateTrollTab()
-	trollActive = true
-	TrollTabButton.TextColor3 = Color3.fromRGB(0, 255, 0)
-	MainTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-	ClearOptions()
-
-	-- Título
-	local Title = Instance.new("TextLabel")
-	Title.Size = UDim2.new(1, -10, 0, 30)
-	Title.Text = "😈 Troll"
-	Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-	Title.BackgroundTransparency = 1
-	Title.TextSize = 20
-	Title.Font = Enum.Font.GothamBold
-	Title.TextXAlignment = Enum.TextXAlignment.Left
-	Title.Parent = OptionsFrame
-
-	-- TextBox Nome
-	local nameBox = Instance.new("TextBox")
-	nameBox.Size = UDim2.new(1, -10, 0, 35)
-	nameBox.Position = UDim2.new(0, 5, 0, 40)
-	nameBox.PlaceholderText = "Nome"
-	nameBox.ClearTextOnFocus = false
-	nameBox.Text = ""
-	nameBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-	nameBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-	nameBox.Font = Enum.Font.Gotham
-	nameBox.TextSize = 18
-	nameBox.Parent = OptionsFrame
-
-	nameBox.FocusLost:Connect(function(enterPressed)
-		if enterPressed then
-			local plr = findPlayerByName(nameBox.Text)
-			if plr then
-				selectedPlayer = plr
-				game.StarterGui:SetCore("ChatMakeSystemMessage", {
-					Text = "Selecionado: " .. selectedPlayer.Name,
-					Color = Color3.new(0, 1, 0),
-					Font = Enum.Font.GothamBold,
-					TextSize = 18
-				})
-			else
-				selectedPlayer = nil
-				game.StarterGui:SetCore("ChatMakeSystemMessage", {
-					Text = "Jogador não encontrado.",
-					Color = Color3.new(1, 0, 0),
-					Font = Enum.Font.GothamBold,
-					TextSize = 18
-				})
-			end
-		end
-	end)
-
-	-- Botão Troll
-	local trollButton = Instance.new("TextButton")
-	trollButton.Size = UDim2.new(1, -10, 0, 35)
-	trollButton.Position = UDim2.new(0, 5, 0, 85)
-	trollButton.Text = "Troll"
-	trollButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	trollButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-	trollButton.Font = Enum.Font.GothamBold
-	trollButton.TextSize = 18
-	trollButton.AutoButtonColor = false
-	trollButton.Parent = OptionsFrame
-
-	Instance.new("UIStroke", trollButton).Color = Color3.new(1, 1, 1)
-
-	trollButton.MouseButton1Click:Connect(function()
-		local char = player.Character or player.CharacterAdded:Wait()
-		local hrp = char:WaitForChild("HumanoidRootPart", 2)
-		if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") and hrp then
-			ultimaPosicao = hrp.CFrame
-
-			local backpack = player:FindFirstChildOfClass("Backpack")
-			if backpack then
-				for _, tool in pairs(backpack:GetChildren()) do
-					if tool:IsA("Tool") then
-						tool.Parent = char
-					end
-				end
-			end
-
-			local success = pcall(function()
-				hrp.CFrame = CFrame.new(Vector3.new(-82.61, 20.94, -129.95))
-			end)
-			if not success then
-				local rand = Vector3.new(math.random(-300, 300), 50, math.random(-300, 300))
-				hrp.CFrame = CFrame.new(rand)
-			end
-
-			task.wait(2)
-
-			local targetHRP = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
-			if targetHRP then
-				hrp.CFrame = CFrame.new(targetHRP.Position.X, targetHRP.Position.Y - 5, targetHRP.Position.Z)
-			end
-
-			task.wait(2)
-
-			hrp.CFrame = CFrame.new(0, -10000, 0)
-
-			task.wait(1)
-
-			for _, tool in pairs(char:GetChildren()) do
-				if tool:IsA("Tool") then
-					tool.Parent = backpack
-				end
-			end
-		else
-			game.StarterGui:SetCore("ChatMakeSystemMessage", {
-				Text = "Nenhum jogador selecionado ou inválido.",
-				Color = Color3.new(1, 0, 0),
-				Font = Enum.Font.GothamBold,
-				TextSize = 18
-			})
-		end
-	end)
-
-	-- Botão View
-	local viewButton = Instance.new("TextButton")
-	viewButton.Size = UDim2.new(1, -10, 0, 35)
-	viewButton.Position = UDim2.new(0, 5, 0, 130)
-	viewButton.Text = "View"
-	viewButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	viewButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-	viewButton.Font = Enum.Font.GothamBold
-	viewButton.TextSize = 18
-	viewButton.AutoButtonColor = false
-	viewButton.Parent = OptionsFrame
-
-	Instance.new("UIStroke", viewButton).Color = Color3.new(1, 1, 1)
-
-	viewButton.MouseButton1Click:Connect(function()
-		if not selectedPlayer or not selectedPlayer.Character or not selectedPlayer.Character:FindFirstChild("Humanoid") then
-			game.StarterGui:SetCore("ChatMakeSystemMessage", {
-				Text = "Nenhum jogador selecionado válido para View.",
-				Color = Color3.new(1, 0, 0),
-				Font = Enum.Font.GothamBold,
-				TextSize = 18
-			})
-			return
-		end
-
-		isViewing = not isViewing
-		camera.CameraSubject = isViewing and selectedPlayer.Character:FindFirstChild("Humanoid") or (player.Character and player.Character:FindFirstChild("Humanoid"))
-		camera.CameraType = isViewing and Enum.CameraType.Track or Enum.CameraType.Custom
-	end)
-
-	-- Botão Bring
-	local bringButton = Instance.new("TextButton")
-	bringButton.Size = UDim2.new(1, -10, 0, 35)
-	bringButton.Position = UDim2.new(0, 5, 0, 175)
-	bringButton.Text = "Bring"
-	bringButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-	bringButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-	bringButton.Font = Enum.Font.GothamBold
-	bringButton.TextSize = 18
-	bringButton.AutoButtonColor = false
-	bringButton.Parent = OptionsFrame
-
-	Instance.new("UIStroke", bringButton).Color = Color3.new(1, 1, 1)
-
-	bringButton.MouseButton1Click:Connect(function()
-		local char = player.Character or player.CharacterAdded:Wait()
-		local hrp = char:WaitForChild("HumanoidRootPart", 2)
-		if ultimaPosicao and hrp then
-			hrp.CFrame = ultimaPosicao
-		else
-			game.StarterGui:SetCore("ChatMakeSystemMessage", {
-				Text = "Nenhuma posição salva para retornar.",
-				Color = Color3.new(1, 0, 0),
-				Font = Enum.Font.GothamBold,
-				TextSize = 18
-			})
-		end
-	end)
+    trollActive = true
+    TrollTabButton.TextColor3 = Color3.fromRGB(0, 255, 0)
+    MainTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ClearOptions()
+    
+    -- Título
+    local Title = Instance.new("TextLabel")
+    Title.Size = UDim2.new(1, -10, 0, 30)
+    Title.Text = "😈 Troll"
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Title.BackgroundTransparency = 1
+    Title.TextSize = 20
+    Title.Font = Enum.Font.GothamBold
+    Title.TextXAlignment = Enum.TextXAlignment.Left
+    Title.Parent = OptionsFrame
+    
+    -- TextBox Nome
+    local nameBox = Instance.new("TextBox")
+    nameBox.Size = UDim2.new(1, -10, 0, 35)
+    nameBox.Position = UDim2.new(0, 5, 0, 40)
+    nameBox.PlaceholderText = "Nome"
+    nameBox.ClearTextOnFocus = false
+    nameBox.Text = ""
+    nameBox.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    nameBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+    nameBox.Font = Enum.Font.Gotham
+    nameBox.TextSize = 18
+    nameBox.Parent = OptionsFrame
+    
+    nameBox.FocusLost:Connect(function(enterPressed)
+        if enterPressed then
+            local plr = findPlayerByName(nameBox.Text)
+            if plr then
+                selectedPlayer = plr
+                game.StarterGui:SetCore("ChatMakeSystemMessage", {
+                Text = "Selecionado: " .. selectedPlayer.Name,
+                Color = Color3.new(0, 1, 0),
+                Font = Enum.Font.GothamBold,
+                TextSize = 18
+                })
+            else
+                selectedPlayer = nil
+                game.StarterGui:SetCore("ChatMakeSystemMessage", {
+                Text = "Jogador não encontrado.",
+                Color = Color3.new(1, 0, 0),
+                Font = Enum.Font.GothamBold,
+                TextSize = 18
+                })
+            end
+        end
+    end)
+    
+    -- Botão Troll
+    local trollButton = Instance.new("TextButton")
+    trollButton.Size = UDim2.new(1, -10, 0, 35)
+    trollButton.Position = UDim2.new(0, 5, 0, 85)
+    trollButton.Text = "Troll"
+    trollButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    trollButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    trollButton.Font = Enum.Font.GothamBold
+    trollButton.TextSize = 18
+    trollButton.AutoButtonColor = false
+    trollButton.Parent = OptionsFrame
+    
+    local stroke = Instance.new("UIStroke")
+    stroke.Color = Color3.new(1, 1, 1)
+    stroke.Thickness = 1.5
+    stroke.Parent = trollButton
+    
+    trollButton.MouseButton1Click:Connect(function()
+        local char = player.Character or player.CharacterAdded:Wait()
+        local hrp = char:WaitForChild("HumanoidRootPart", 2)
+        if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") and hrp then
+            local backpack = player:FindFirstChildOfClass("Backpack")
+            if backpack then
+                for _, tool in pairs(backpack:GetChildren()) do
+                    if tool:IsA("Tool") then
+                        tool.Parent = char
+                    end
+                end
+            end
+            
+            local success, err = pcall(function()
+                hrp.CFrame = CFrame.new(Vector3.new(-82.61, 20.94, -129.95))
+            end)
+            if not success then
+                local rand = Vector3.new(math.random(-300, 300), 50, math.random(-300, 300))
+                hrp.CFrame = CFrame.new(rand)
+            end
+            
+            task.wait(2)
+            
+            local targetHRP = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
+            if targetHRP then
+                hrp.CFrame = targetHRP.CFrame * CFrame.new(0, -5, 0)
+            end
+            
+            task.wait(2)
+            
+            hrp.CFrame = CFrame.new(0, -5000, 0)
+            
+            -- Espera 1 segundo no void, então desequipa
+            task.wait(1)
+            for _, tool in pairs(char:GetChildren()) do
+                if tool:IsA("Tool") then
+                    tool.Parent = backpack
+                end
+            end
+            
+        else
+            game.StarterGui:SetCore("ChatMakeSystemMessage", {
+            Text = "Nenhum jogador selecionado ou inválido.",
+            Color = Color3.new(1, 0, 0),
+            Font = Enum.Font.GothamBold,
+            TextSize = 18
+            })
+        end
+    end)
+    
+    -- Botão View
+    local viewButton = Instance.new("TextButton")
+    viewButton.Size = UDim2.new(1, -10, 0, 35)
+    viewButton.Position = UDim2.new(0, 5, 0, 130)
+    viewButton.Text = "View"
+    viewButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    viewButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    viewButton.Font = Enum.Font.GothamBold
+    viewButton.TextSize = 18
+    viewButton.AutoButtonColor = false
+    viewButton.Parent = OptionsFrame
+    
+    local strokeView = Instance.new("UIStroke")
+    strokeView.Color = Color3.new(1, 1, 1)
+    strokeView.Thickness = 1.5
+    strokeView.Parent = viewButton
+    
+    viewButton.MouseButton1Click:Connect(function()
+        if not selectedPlayer or not selectedPlayer.Character or not selectedPlayer.Character:FindFirstChild("Humanoid") then
+            game.StarterGui:SetCore("ChatMakeSystemMessage", {
+            Text = "Nenhum jogador selecionado válido para View.",
+            Color = Color3.new(1, 0, 0),
+            Font = Enum.Font.GothamBold,
+            TextSize = 18
+            })
+            return
+        end
+        
+        if not isViewing then
+            isViewing = true
+            camera.CameraSubject = selectedPlayer.Character:FindFirstChild("Humanoid")
+            camera.CameraType = Enum.CameraType.Track
+        else
+            isViewing = false
+            camera.CameraSubject = player.Character and player.Character:FindFirstChild("Humanoid")
+            camera.CameraType = Enum.CameraType.Custom
+        end
+    end)
 end
 
 -- Clique no botão da aba Troll
 TrollTabButton.MouseButton1Click:Connect(function()
-	if trollActive then
-		trollActive = false
-		TrollTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-		ClearOptions()
-	else
-		ActivateTrollTab()
-		mainActive = false
-		MainTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-	end
-end)1
+    if trollActive then
+        trollActive = false
+        TrollTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+        ClearOptions()
+    else
+        ActivateTrollTab()
+        mainActive = false
+        MainTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    end
+end)
