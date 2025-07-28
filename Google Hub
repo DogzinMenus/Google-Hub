@@ -359,30 +359,40 @@ end)
 local TrollTabButton = Instance.new("TextButton")
 TrollTabButton.Name = "TrollTab"
 TrollTabButton.Size = UDim2.new(1, -10, 0, 40)
-TrollTabButton.Position = UDim2.new(0, 5, 0, 45)
+TrollTabButton.Position = UDim2.new(0, 5, 0, 45) -- abaixo do MainTab
 TrollTabButton.BackgroundTransparency = 1
 TrollTabButton.Text = "😈 Troll"
 TrollTabButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 TrollTabButton.Font = Enum.Font.GothamBold
 TrollTabButton.TextSize = 20
 TrollTabButton.Parent = SideFrame
- 
+
 local trollActive = false
 local selectedPlayer = nil
 local Players = game:GetService("Players")
 local player = Players.LocalPlayer
- 
--- Função para encontrar jogador por nome
+
+-- Função para limpar opções (igual da Main)
+local function ClearOptions()
+    for _, child in ipairs(OptionsFrame:GetChildren()) do
+        if not child:IsA("UIListLayout") then
+            child:Destroy()
+        end
+    end
+end
+
+-- Função para encontrar jogador pelo começo do nome (case insensitive)
 local function findPlayerByName(name)
+    name = name:lower()
     for _, plr in ipairs(Players:GetPlayers()) do
-        if plr.Name:lower():sub(1, #name) == name:lower() then
+        if plr.Name:lower():sub(1, #name) == name then
             return plr
         end
     end
     return nil
 end
- 
--- Função para criar botões simples dentro do OptionsFrame
+
+-- Função para criar botões simples no OptionsFrame
 local function createOptionButton(text, positionY, callback)
     local btn = Instance.new("TextButton")
     btn.Size = UDim2.new(1, -10, 0, 35)
@@ -394,16 +404,23 @@ local function createOptionButton(text, positionY, callback)
     btn.Text = text
     btn.Parent = OptionsFrame
     
-    local active = false
     btn.MouseButton1Click:Connect(function()
-        active = not active
         if callback then
-            callback(active)
+            callback()
         end
     end)
     return btn
 end
- 
+
+local function notify(text, color)
+    game.StarterGui:SetCore("ChatMakeSystemMessage", {
+    Text = text,
+    Color = color or Color3.new(1,1,1),
+    Font = Enum.Font.GothamBold,
+    TextSize = 18
+    })
+end
+
 -- Função para ativar a aba Troll
 local function ActivateTrollTab()
     trollActive = true
@@ -423,7 +440,7 @@ local function ActivateTrollTab()
     Title.TextXAlignment = Enum.TextXAlignment.Left
     Title.Parent = OptionsFrame
     
-    -- TextBox para digitar o nome do jogador
+    -- TextBox para digitar nome
     local nameBox = Instance.new("TextBox")
     nameBox.Size = UDim2.new(1, -10, 0, 35)
     nameBox.Position = UDim2.new(0, 5, 0, 40)
@@ -441,96 +458,73 @@ local function ActivateTrollTab()
             local plr = findPlayerByName(nameBox.Text)
             if plr then
                 selectedPlayer = plr
-                game.StarterGui:SetCore("ChatMakeSystemMessage", {
-                Text = "Selecionado: " .. selectedPlayer.Name,
-                Color = Color3.new(0, 1, 0),
-                Font = Enum.Font.GothamBold,
-                TextSize = 18
-                })
+                notify("Selecionado: " .. selectedPlayer.Name, Color3.new(0,1,0))
             else
                 selectedPlayer = nil
-                game.StarterGui:SetCore("ChatMakeSystemMessage", {
-                Text = "❌ Erro: Player not found!",
-                Color = Color3.new(1, 0, 0),
-                Font = Enum.Font.GothamBold,
-                TextSize = 18
-                })
+                notify("❌ Erro: Player not found!", Color3.new(1,0,0))
             end
         end
     end)
     
     -- Botão Troll
-    createOptionButton("Troll", 85, function(active)
-        if not active then return end
+    createOptionButton("Troll", 85, function()
+        if not selectedPlayer or not selectedPlayer.Character or not selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            notify("❌ Nenhum jogador selecionado ou inválido!", Color3.new(1,0,0))
+            return
+        end
         
-        if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
-            local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
-            local character = player.Character
-            if not hrp or not character then return end
-            
-            -- Equipar todas as ferramentas da Backpack
-            local backpack = player:FindFirstChildOfClass("Backpack")
-            if backpack then
-                for _, tool in pairs(backpack:GetChildren()) do
-                    if tool:IsA("Tool") then
-                        tool.Parent = character
-                    end
+        local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+        local character = player.Character
+        if not hrp or not character then
+            notify("❌ Seu personagem não está pronto!", Color3.new(1,0,0))
+            return
+        end
+        
+        -- Equipar todas as ferramentas da mochila
+        local backpack = player:FindFirstChildOfClass("Backpack")
+        if backpack then
+            for _, tool in pairs(backpack:GetChildren()) do
+                if tool:IsA("Tool") then
+                    tool.Parent = character
                 end
             end
-            
-            spawn(function()
-                while active do
-                    -- Teleportar para a posição fixa
-                    hrp.CFrame = CFrame.new(Vector3.new(-82.61, 20.94, -129.95))
-                    wait(1)
-                    
-                    -- Teleportar para a posição exata do jogador selecionado
-                    local targetHRP = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
-                    if targetHRP then
-                        hrp.CFrame = targetHRP.CFrame
-                        wait(1)
-                        -- Teleportar para 5 studs para baixo da posição do jogador
-                        local pos = targetHRP.Position
-                        hrp.CFrame = CFrame.new(pos.X, pos.Y - 5, pos.Z)
-                    end
-                    
-                    wait(1)
-                    
-                    -- Teleportar para o void (fica lá no loop)
-                    hrp.CFrame = CFrame.new(0, -5000, 0)
-                    wait(2)
-                end
-            end)
-        else
-            game.StarterGui:SetCore("ChatMakeSystemMessage", {
-            Text = "Nenhum jogador selecionado ou jogador inválido.",
-            Color = Color3.new(1, 0, 0),
-            Font = Enum.Font.GothamBold,
-            TextSize = 18
-            })
         end
+        
+        spawn(function()
+            for _=1, 3 do
+                -- Teleportar para a posição fixa
+                hrp.CFrame = CFrame.new(-82.61, 20.94, -129.95)
+                wait(1)
+                
+                -- Teleportar para a posição exata do jogador selecionado
+                local targetHRP = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
+                if targetHRP then
+                    hrp.CFrame = targetHRP.CFrame
+                    wait(1)
+                    -- Teleportar 5 studs para baixo da posição do jogador
+                    local pos = targetHRP.Position
+                    hrp.CFrame = CFrame.new(pos.X, pos.Y - 5, pos.Z)
+                    wait(1)
+                end
+                
+                -- Teleportar para o void e ficar 4 segundos
+                hrp.CFrame = CFrame.new(0, -5000, 0)
+                wait(4)
+            end
+            notify("Troll finalizado!", Color3.new(0,1,0))
+        end)
     end)
     
     -- Botão View
     createOptionButton("View", 130, function()
         if selectedPlayer then
-            game.StarterGui:SetCore("ChatMakeSystemMessage", {
-            Text = "Jogador selecionado: " .. selectedPlayer.Name,
-            Color = Color3.new(0, 1, 0),
-            Font = Enum.Font.GothamBold,
-            TextSize = 18
-            })
+            notify("Jogador selecionado: " .. selectedPlayer.Name, Color3.new(0,1,0))
         else
-            game.StarterGui:SetCore("ChatMakeSystemMessage", {
-            Text = "Nenhum jogador selecionado.",
-            Color = Color3.new(1, 0, 0),
-            Font = Enum.Font.GothamBold,
-            TextSize = 18
-            })
+            notify("Nenhum jogador selecionado.", Color3.new(1,0,0))
         end
     end)
 end
- 
+
 -- Evento do botão da aba Troll
 TrollTabButton.MouseButton1Click:Connect(function()
     if trollActive then
