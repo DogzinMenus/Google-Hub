@@ -465,6 +465,11 @@ local function ActivateTrollTab()
         local hrp = char:WaitForChild("HumanoidRootPart", 2)
         
         if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") and hrp then
+            local destino = Vector3.new(-82.61, 20.94, -129.95)
+            char:MoveTo(destino)
+            repeat task.wait() until (hrp.Position - destino).Magnitude < 5
+            task.wait(2)
+            
             local backpack = player:FindFirstChildOfClass("Backpack")
             if backpack then
                 for _, tool in pairs(backpack:GetChildren()) do
@@ -474,26 +479,6 @@ local function ActivateTrollTab()
                 end
             end
             
-            -- Vai para a posição inicial
-            local success, err = pcall(function()
-                hrp.CFrame = CFrame.new(Vector3.new(-82.61, 20.94, -129.95))
-            end)
-            if not success then
-                local rand = Vector3.new(math.random(-300, 300), 50, math.random(-300, 300))
-                hrp.CFrame = CFrame.new(rand)
-            end
-            
-            -- Loop de 2 segundos teleportando abaixo do jogador
-            local start = tick()
-            while tick() - start < 2 do
-                local targetHRP = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
-                if targetHRP then
-                    hrp.CFrame = targetHRP.CFrame * CFrame.new(0, -5, 0)
-                end
-                task.wait()
-            end
-            
-            -- Vai pro void
             hrp.CFrame = CFrame.new(0, -10000, 0)
         else
             game.StarterGui:SetCore("ChatMakeSystemMessage", {
@@ -502,95 +487,6 @@ local function ActivateTrollTab()
             Font = Enum.Font.GothamBold,
             TextSize = 18
             })
-        end
-    end)
-    
-    -- Botão Bring
-    local bringButton = Instance.new("TextButton")
-    bringButton.Size = UDim2.new(1, -10, 0, 35)
-    bringButton.Position = UDim2.new(0, 5, 0, 130)
-    bringButton.Text = "Bring"
-    bringButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    bringButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    bringButton.Font = Enum.Font.GothamBold
-    bringButton.TextSize = 18
-    bringButton.AutoButtonColor = false
-    bringButton.Parent = OptionsFrame
-    
-    local strokeB = Instance.new("UIStroke")
-    strokeB.Color = Color3.new(1, 1, 1)
-    strokeB.Thickness = 1.5
-    strokeB.Parent = bringButton
-    
-    bringButton.MouseButton1Click:Connect(function()
-        local char = player.Character or player.CharacterAdded:Wait()
-        local hrp = char:WaitForChild("HumanoidRootPart", 2)
-        
-        if selectedPlayer and selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") and hrp then
-            -- Vai para a posição inicial
-            local success, err = pcall(function()
-                hrp.CFrame = CFrame.new(Vector3.new(-82.61, 20.94, -129.95))
-            end)
-            if not success then
-                local rand = Vector3.new(math.random(-300, 300), 50, math.random(-300, 300))
-                hrp.CFrame = CFrame.new(rand)
-            end
-            
-            -- Loop de 2 segundos teleportando abaixo do jogador
-            local start = tick()
-            while tick() - start < 2 do
-                local targetHRP = selectedPlayer.Character:FindFirstChild("HumanoidRootPart")
-                if targetHRP then
-                    hrp.CFrame = targetHRP.CFrame * CFrame.new(0, -5, 0)
-                end
-                task.wait()
-            end
-        else
-            game.StarterGui:SetCore("ChatMakeSystemMessage", {
-            Text = "Nenhum jogador selecionado ou inválido.",
-            Color = Color3.new(1, 0, 0),
-            Font = Enum.Font.GothamBold,
-            TextSize = 18
-            })
-        end
-    end)
-    
-    -- Botão View (inalterado)
-    local viewButton = Instance.new("TextButton")
-    viewButton.Size = UDim2.new(1, -10, 0, 35)
-    viewButton.Position = UDim2.new(0, 5, 0, 175)
-    viewButton.Text = "View"
-    viewButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    viewButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-    viewButton.Font = Enum.Font.GothamBold
-    viewButton.TextSize = 18
-    viewButton.AutoButtonColor = false
-    viewButton.Parent = OptionsFrame
-    
-    local strokeView = Instance.new("UIStroke")
-    strokeView.Color = Color3.new(1, 1, 1)
-    strokeView.Thickness = 1.5
-    strokeView.Parent = viewButton
-    
-    viewButton.MouseButton1Click:Connect(function()
-        if not selectedPlayer or not selectedPlayer.Character or not selectedPlayer.Character:FindFirstChild("Humanoid") then
-            game.StarterGui:SetCore("ChatMakeSystemMessage", {
-            Text = "Nenhum jogador selecionado válido para View.",
-            Color = Color3.new(1, 0, 0),
-            Font = Enum.Font.GothamBold,
-            TextSize = 18
-            })
-            return
-        end
-        
-        if not isViewing then
-            isViewing = true
-            camera.CameraSubject = selectedPlayer.Character:FindFirstChild("Humanoid")
-            camera.CameraType = Enum.CameraType.Track
-        else
-            isViewing = false
-            camera.CameraSubject = player.Character and player.Character:FindFirstChild("Humanoid")
-            camera.CameraType = Enum.CameraType.Custom
         end
     end)
 end
